@@ -1,0 +1,41 @@
+<idea-plugin>
+    <id>dev.agentsdeck.linear</id>
+    <name>Agents Deck: Linear</name>
+    <vendor url="https://github.com/alenkazoloto">Agents Deck</vendor>
+    <description><![CDATA[
+        <p>Puts your <b>Linear</b> issues behind the <code>#</code> completion in
+        <b>Agents Deck</b>.</p>
+        <ul>
+        <li><b><code>#</code> in chat</b> — search your workspace by title, or type
+        <code>ENG-123</code> outright; the issue's title and description travel with the
+        prompt.</li>
+        <li><b>Links in agent output</b> — <code>ENG-123</code> opens the issue, for the team
+        keys your workspace actually has.</li>
+        <li><b>Settings › Connections › Integrations › Linear</b> — which key is in force and
+        who it belongs to.</li>
+        </ul>
+        <p>Authentication is a Linear <b>personal API key</b> read from
+        <code>LINEAR_API_KEY</code> in your environment, or from the <code>env</code> block of a
+        configured stdio MCP server. No browser sign-in, and nothing is stored by this plugin.
+        With no key set, it contributes nothing at all — the chat is exactly the chat Agents
+        Deck ships.</p>
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <!-- Not optional: without the host there are no extension points to contribute to and no
+         `com.github.claudeagents.api` on the classpath. -->
+    <depends>dev.agentsdeck.jetbrains</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <postStartupActivity implementation="dev.agentsdeck.linear.LinearStartup"/>
+    </extensions>
+
+    <!-- The host's extension points are auto-prefixed with its plugin id, so the namespace is
+         the id and the point is its bare name. -->
+    <extensions defaultExtensionNs="dev.agentsdeck.jetbrains">
+        <issueProvider implementation="dev.agentsdeck.linear.LinearProviderFactory"/>
+        <transcriptLinker implementation="dev.agentsdeck.linear.LinearLinkContributor"/>
+        <settingsSection implementation="dev.agentsdeck.linear.LinearSettingsSection"/>
+    </extensions>
+</idea-plugin>
